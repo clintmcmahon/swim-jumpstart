@@ -44,29 +44,36 @@ public class RestrictionMessage {
         Timestamp eventTime = SqlHelper.fromGregorianCalendar(restriction.getEventTime());
         Timestamp entryTime = SqlHelper.fromGregorianCalendar(restriction.getEntryTime());
         String facility = restriction.getFacility();
-        Integer action = restriction.getAction().getValue().intValue();
+        Integer action = restriction.getAction() == null ? 0 : restriction.getAction().getValue().intValue();
         Long restrictionId = restriction.getRestrictionId();
-        String restrictedNasElements = restriction.getRestrictedNasElements().getValue();
+        String restrictedNasElements = restriction.getRestrictedNasElements() == null ? null
+                : restriction.getRestrictedNasElements().getValue();
+
         Timestamp startTime = SqlHelper.fromGregorianCalendar(restriction.getStartTime());
         Timestamp stopTime = SqlHelper.fromGregorianCalendar(restriction.getStopTime());
-        String airports = restriction.getAirports().getValue();
+        String airports = restriction.getAirports() == null ? null : restriction.getAirports().getValue();
 
         String aircraftType = restriction.getAircraftType();
         Integer restrictionType = restriction.getRestrictionType().intValue();
-        Long mitNumber = restriction.getMitNumber().getValue();
-        Integer mitValue = restriction.getMitValue().getValue().intValue();
-        String altitude = restriction.getAltitude().getValue();
-        Integer speed = restriction.getSpeed().getValue().intValue();
+        Long mitNumber = restriction.getMitNumber() == null ? 0L : restriction.getMitNumber().getValue();
+        Integer mitValue = restriction.getMitValue() == null ? 0 : restriction.getMitValue().getValue().intValue();
+
+        String altitude = restriction.getAltitude() == null ? null : restriction.getAltitude().getValue();
+        Integer speed = restriction.getSpeed() == null ? 0 : restriction.getSpeed().getValue().intValue();
         String reasonText = restriction.getReasonText();
-        String impactedElements = restriction.getImpactedElements().getValue();
-        String qualifier = restriction.getQualifier().getValue();
+        String impactedElements = restriction.getImpactedElements() == null ? null
+                : restriction.getImpactedElements().getValue();
+        String qualifier = restriction.getQualifier() == null ? null : restriction.getQualifier().getValue();
         String passback = restriction.getPassback();
-        String exclusions = restriction.getExclusions().getValue();
+        String exclusions = restriction.getExclusions() == null ? null : restriction.getExclusions().getValue();
+
+        // put some protection on approval time?
         Timestamp approvalTime = SqlHelper.fromGregorianCalendar(jaxbElementValue(restriction.getApprovalTime()));
+
         String providerStatus = restriction.getProviderStatus();
         String referenceRestrictionEndtime = jaxbElementValue(restriction.getReferenceRestrictionEndTime());
         Long refreenceRestrictionId = restriction.getReferenceRestrictionId();
-        String remarks = restriction.getRemarks().getValue();
+        String remarks = restriction.getRemarks() == null ? null : restriction.getRemarks().getValue();
 
         ps.setTimestamp(4, eventTime);
         ps.setTimestamp(5, entryTime);
