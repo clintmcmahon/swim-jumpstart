@@ -6,12 +6,18 @@ package com.l3harris.swim.outputs;
 import com.typesafe.config.Config;
 
 public class NoopOutput extends Output {
+
     public NoopOutput(Config config) {
         super(config);
     }
 
     @Override
     public void output(String message) {
-        // explicitly do nothing
+        try {
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
     }
 }
