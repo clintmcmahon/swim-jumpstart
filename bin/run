@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-java "$@" -jar $(dirname "$0")/../swim-jumpstart.jar
+java "$@" -jar $(dirname "$0")/../JetTip.SWIM.Jumpstart.jar

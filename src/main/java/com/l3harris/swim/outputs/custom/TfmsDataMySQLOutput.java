@@ -3,9 +3,8 @@
  */
 package com.l3harris.swim.outputs.custom;
 
+import com.l3harris.swim.FlightData.TfmsFlightDataService;
 import com.l3harris.swim.outputs.Output;
-import com.l3harris.swim.outputs.custom.tfmsFlow.AirportConfigurationMessage;
-import com.l3harris.swim.outputs.custom.tfmsFlow.RestrictionMessage;
 import com.typesafe.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,33 +23,32 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class TfmsFlowPostgresOutput extends Output {
-    private static Logger logger = LoggerFactory.getLogger(TfmsFlowPostgresOutput.class);
+public class TfmsDataMySQLOutput extends Output {
+    private static Logger logger = LoggerFactory.getLogger(TfmsDataMySQLOutput.class);
 
     private JAXBContext jaxbContext;
     private Connection connection;
 
-    public TfmsFlowPostgresOutput(Config config) {
+    public TfmsDataMySQLOutput(Config config) {
         super(config);
-        Config postgresConfig = config.getConfig("postgres");
+        Config postgresConfig = config.getConfig("mysql");
 
         try {
-            // Class.forName("org.postgresql.Driver");
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                     postgresConfig.getString("uri"),
                     postgresConfig.getString("user"),
                     postgresConfig.getString("password"));
 
-            logger.info("Connection to postgres successful");
+            logger.info("Connection to mysql successful");
 
         } catch (Exception e) {
-            logger.error("Failed to connect and/or setup postgres", e);
+            logger.error("Failed to connect and/or setup mysql", e);
             System.exit(-1);
         }
 
         try {
-            jaxbContext = JAXBContext.newInstance("us.gov.dot.faa.atm.tfm.tfmdataservice");
+            jaxbContext = JAXBContext.newInstance(TfmsFlightDataService.class);
         } catch (JAXBException e) {
             logger.error("Failed to create the JAXBContext", e);
             System.exit(-1);
@@ -61,10 +59,10 @@ public class TfmsFlowPostgresOutput extends Output {
     public void output(String message) {
         try {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            TfmDataService tfmDataService = (TfmDataService) unmarshaller
+            TfmsFlightDataService tfmDataService = (TfmsFlightDataService) unmarshaller
                     .unmarshal(XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(message)));
 
-            // logger.info(tfmDataService.getFiOutput().getFiMessage().getMsgType().toString());
+            logger.info(tfmDataService.toString());
             /*
              * switch (tfmDataService.getFiOutput().getFiMessage().getMsgType()) {
              * case RSTR:

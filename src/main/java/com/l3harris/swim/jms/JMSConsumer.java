@@ -85,7 +85,8 @@ public class JMSConsumer implements MessageListener, ExceptionListener {
     }
 
     /**
-     * Sends received JMS message to the broker. Includes original JMS properties in addition to the message body.
+     * Sends received JMS message to the broker. Includes original JMS properties in
+     * addition to the message body.
      *
      * @param message The incoming message.
      */
